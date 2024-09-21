@@ -1,7 +1,7 @@
-import Image from "next/image";
 import WelcomeImg from "@/assets/images/shopping-sale.png";
-import { IoIosCheckmarkCircleOutline } from "react-icons/io";
+import Image from "next/image";
 import Link from "next/link";
+import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 export default function Home() {
 	const works = [

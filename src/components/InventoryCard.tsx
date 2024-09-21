@@ -1,27 +1,68 @@
+import { InventoryOption } from "@/app/create-product/page";
 import React from "react";
 import { GoKebabHorizontal } from "react-icons/go";
+import Badge from "./Badge";
 
 interface Props {
 	index: number;
+	option: InventoryOption;
+	inventoryOptions: InventoryOption[];
+	setInventoryOptions: React.Dispatch<React.SetStateAction<InventoryOption[]>>;
+	handleOptionValueChange: (index: number, value: string) => void;
+	handleRemoveValue: (optionIndex: number, valueIndex: number) => void;
 }
-const InventoryCard = ({ index }: Props) => {
+const InventoryCard = ({
+	index,
+	option,
+	inventoryOptions,
+	setInventoryOptions,
+	handleOptionValueChange,
+	handleRemoveValue,
+}: Props) => {
 	return (
 		<div
 			className='border rounded-[12px] border-[#0000]/20 px-[12px] py-[10px]'
 			key={index}>
-			<div className='flex items-center justify-between mb-[20px]'>
-				<div className='flex flex-col'>
+			<div className='flex items-center justify-between mb-[10px]'>
+				<div className='flex flex-col w-[40%]'>
 					<span className='text-[10px] text-[#0000]/60'>
 						Option {index + 1}
 					</span>
-					<span className='font-medium'>Color</span>
+					<input
+						className='w-full py-2 border-0 rounded-md shadow-sm outline-none mb-[10px]'
+						placeholder={`Option name (e.g., ${option.name || "Color"})`}
+						value={option.name}
+						onChange={(e) => {
+							const newOptions = [...inventoryOptions];
+							newOptions[index].name = e.target.value;
+							setInventoryOptions(newOptions);
+						}}
+					/>
+					<div className='flex flex-wrap gap-2 mb-2'>
+						{option.values.map((value, valueIndex) => (
+							<Badge
+								key={valueIndex}
+								onRemove={() => handleRemoveValue(index, valueIndex)}>
+								{value}
+							</Badge>
+						))}
+					</div>
 				</div>
 				<GoKebabHorizontal size={20} className='text-[#000]/60' />
 			</div>
 			<input
-				type='text'
-				placeholder='Enter values'
-				className='outline-none border-0 w-[90%]'
+				className='w-full py-2 border-0 rounded-md shadow-sm outline-none'
+				placeholder='Enter value and press Enter'
+				onKeyDown={(e) => {
+					if (e.key === "Enter") {
+						e.preventDefault();
+						handleOptionValueChange(
+							index,
+							(e.target as HTMLInputElement).value
+						);
+						(e.target as HTMLInputElement).value = "";
+					}
+				}}
 			/>
 		</div>
 	);

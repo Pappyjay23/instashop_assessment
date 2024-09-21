@@ -1,7 +1,11 @@
-import { Metadata } from "next";
+"use client";
+
+import VendorImg from "@/assets/images/upload-img.png";
+import { AppContextUse } from "@/context/appContext";
+import { useAuth } from "@/utils/useAuth";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { AiOutlineHeart } from "react-icons/ai";
 import { GoDotFill, GoKebabHorizontal, GoPeople } from "react-icons/go";
 import {
 	IoIosArrowDown,
@@ -9,15 +13,19 @@ import {
 	IoIosStarHalf,
 	IoMdArrowBack,
 } from "react-icons/io";
-import VendorImg from "@/assets/images/upload-img.png";
-import ProductImg from "@/assets/images/product-img.png";
 import { RiShareForwardLine } from "react-icons/ri";
-import { AiOutlineHeart } from "react-icons/ai";
 
-export const metadata: Metadata = {
-	title: "Product Preview",
-};
 const ProductPreviewPage = () => {
+	const {
+		storeData,
+		product: { productDetails, productImages },
+	} = AppContextUse();
+	const { isAuthenticated } = useAuth();
+
+	if (!isAuthenticated) {
+		return null;
+	}
+
 	return (
 		<section className='relative w-full min-h-screen'>
 			<div className='pb-[100px] max-w-[800px] mx-auto'>
@@ -36,18 +44,26 @@ const ProductPreviewPage = () => {
 				<div className='px-[16px] pb-[12px]'>
 					<div className='flex flex-col items-center'>
 						<div className='w-[360px] h-[360px] relative'>
-							<Image
-								src={ProductImg}
-								alt='Product image'
-								className='object-cover'
-								fill
-							/>
+							{productImages.length > 0 ? (
+								<Image
+									src={productImages[0].url}
+									alt='Product image'
+									className='object-cover'
+									fill
+								/>
+							) : (
+								<span className='text-[#000000]/40 text-[12px]'>
+									No product image uploaded yet
+								</span>
+							)}
 						</div>
 					</div>
 					<div className='mt-[16px]'>
-						<div className='flex justify-between'>
+						<div className='flex items-center justify-between'>
 							<span className='font-medium'>
-								Gucci bag – the epitome of luxury and sophistication
+								{productDetails.productTitle
+									? productDetails.productTitle
+									: "No title available"}
 							</span>
 							<div className='flex gap-[4px]'>
 								<div className='bg-[#0000]/5 p-[8px] rounded-full flex justify-center items-center w-[36px] h-[36px]'>
@@ -58,15 +74,21 @@ const ProductPreviewPage = () => {
 								</div>
 							</div>
 						</div>
-						<div className='flex justify-between mt-[8px]'>
+						<div className='flex flex-col md:flex-row gap-4 justify-between mt-[8px]'>
 							<div className='flex items-center gap-[4px]'>
 								<span className='font-medium text-[20px] text-[#3B3B3B]'>
-									#18.0
+									#
+									{productDetails.productCurrentPrice
+										? productDetails.productCurrentPrice
+										: "0.00"}
 								</span>
 								<span className='font-medium text-[12px] text-[#ACACAC]'>
-									#28.0
+									#
+									{productDetails.productOldPrice
+										? productDetails.productOldPrice
+										: "0.00"}
 								</span>
-								<div className='bg-[#8A226F] outline-none border-0 text-white w-full rounded-[24px] py-[2px] px-[8px] text-[10px] flex justify-center items-center'>
+								<div className='bg-[#8A226F] outline-none border-0 text-white w-fit rounded-[24px] py-[2px] px-[8px] text-[10px] flex justify-center items-center'>
 									25% OFF
 								</div>
 							</div>
@@ -129,9 +151,9 @@ const ProductPreviewPage = () => {
 						<IoIosArrowDown size={20} className='text-[#000]/60' />
 					</div>
 					<div>
-						Wholesale and drop shipping are both welcomed. For wholesale,we will
-						offer discount or free express shipping which only takes 3-7 days to
-						arrive...
+						{productDetails.productDescription
+							? productDetails.productDescription
+							: "No description available"}
 					</div>
 					<p className='text-[#8A226F] text-[12px] font-medium'>Read more</p>
 				</div>
@@ -142,18 +164,25 @@ const ProductPreviewPage = () => {
 					</div>
 					<div className='flex items-center justify-between mb-[8px]'>
 						<div className='flex items-center gap-[8px]'>
-							<Image
-								src={VendorImg}
-								alt='vendor image'
-								width={52}
-								height={52}
-								className='rounded-full object-cover'
-							/>
+							<div className='w-[52px] h-[52px] object-cover relative rounded-full overflow-hidden'>
+								<Image
+									src={storeData.storeLogo ? storeData.storeLogo : VendorImg}
+									alt='vendor image'
+									fill
+									className='object-cover'
+								/>
+							</div>
 
 							<div className='flex flex-col'>
-								<span className='text-[12px] font-medium'>Gucci Store</span>
+								<span className='text-[12px] font-medium'>
+									{storeData.storeName ? storeData.storeName : "Gucci Store"}
+								</span>
 								<div className='flex items-center gap-[6px]'>
-									<span className='text-[12px] text-[#0000]/40'>Fashion</span>
+									<span className='text-[12px] text-[#0000]/40'>
+										{storeData.storeTagName
+											? storeData.storeTagName
+											: "Fashion"}
+									</span>
 									<GoDotFill size={8} className='text-[#0000]/60' />
 									<div className='flex items-center gap-[4px]'>
 										<IoIosStar className='text-[#000]/90' />
@@ -170,10 +199,10 @@ const ProductPreviewPage = () => {
 						<p className='text-[#8A226F] text-[12px] font-medium'>Follow</p>
 					</div>
 					<div>
-						Vendor description: You can track your parcel on the following
-						website using your tracking number: www.17track.net/en  (Copied to
-						the browser to open) What can I do when purchase protection time is
-						running out?
+						Vendor description: {storeData.storeName} is a/an online{" "}
+						{storeData.storeTagName} store. You can track your parcel on the
+						following website using your tracking number: www.17track.net/en 
+						What can I do when purchase protection time is running out?
 					</div>
 				</div>
 			</div>

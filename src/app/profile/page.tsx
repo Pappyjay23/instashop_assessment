@@ -1,17 +1,65 @@
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import { IoMdArrowBack } from "react-icons/io";
+"use client";
+
+import GoogleLogo from "@/assets/images/google-logo.png";
 import InstagramLogo from "@/assets/images/instagram-logo.png";
 import TiktokLogo from "@/assets/images/tiktok-logo.png";
-import GoogleLogo from "@/assets/images/google-logo.png";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-	title: "Profile Setup",
-};
+import { AppContextUse, Profile } from "@/context/appContext";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { IoMdArrowBack } from "react-icons/io";
 
 const ProfilePage = () => {
+	const { profileData, setProfileData } = AppContextUse();
+	const [errors, setErrors] = useState<Profile>();
+	const [isValid, setIsValid] = useState(false);
+
+	const validateInput = () => {
+		const newErrors: Profile = {
+			fullName: "",
+			userName: "",
+			phoneNumber: "",
+			email: "",
+		};
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+
+		if (!profileData.fullName.trim()) {
+			newErrors.fullName = "Full name is required";
+		}
+
+		if (!profileData.userName.trim()) {
+			newErrors.userName = "Username is required";
+		}
+
+		if (!profileData.phoneNumber.trim()) {
+			newErrors.phoneNumber = "Phone number is required";
+		} else if (!phoneRegex.test(profileData.phoneNumber)) {
+			newErrors.phoneNumber = "Invalid phone number";
+		}
+
+		if (!profileData.email.trim()) {
+			newErrors.email = "Email is required";
+		} else if (!emailRegex.test(profileData.email)) {
+			newErrors.email = "Invalid email address";
+		}
+
+		setErrors(newErrors);
+		return Object.values(newErrors).every((value) => value === "");
+	};
+
+	useEffect(() => {
+		const formIsValid = validateInput();
+		setIsValid(formIsValid);
+	}, [profileData]);
+
+	const handleInputChange = (field: keyof Profile, value: string) => {
+		setProfileData((prev) => ({
+			...prev,
+			[field]: value,
+		}));
+	};
+
 	return (
 		<section className='relative w-full h-screen'>
 			<div className='px-[16px] pt-[12px] pb-[100px]'>
@@ -64,26 +112,76 @@ const ProfilePage = () => {
 					<div className='w-full md:w-[60%] lg:w-[40%]'>
 						<p className='mb-[16px]'>Or enter manually</p>
 						<div className='flex flex-col gap-[12px]'>
-							<input
-								type='text'
-								placeholder='Full name'
-								className='w-full border border-[#000000]/20 rounded-[12px] py-[15px] px-[12px] text-[000000]/60 outline-none'
-							/>
-							<input
-								type='text'
-								placeholder='Username'
-								className='w-full border border-[#000000]/20 rounded-[12px] py-[15px] px-[12px] text-[000000]/60 outline-none'
-							/>
-							<input
-								type='tel'
-								placeholder='Phone number'
-								className='w-full border border-[#000000]/20 rounded-[12px] py-[15px] px-[12px] text-[000000]/60 outline-none'
-							/>
-							<input
-								type='email'
-								placeholder='Email'
-								className='w-full border border-[#000000]/20 rounded-[12px] py-[15px] px-[12px] text-[000000]/60 outline-none'
-							/>
+							<div>
+								<input
+									type='text'
+									placeholder='Full name'
+									onChange={(e) =>
+										handleInputChange("fullName", e.target.value)
+									}
+									value={profileData.fullName}
+									className={`w-full border ${
+										errors?.fullName ? "border-red-500" : "border-[#000000]/20"
+									} rounded-[12px] py-[15px] px-[12px] text-[000000]/60 outline-none`}
+								/>
+								{errors?.fullName && (
+									<p className='text-red-500 text-sm mt-1'>
+										{errors?.fullName}
+									</p>
+								)}
+							</div>
+							<div>
+								<input
+									type='text'
+									placeholder='Username'
+									onChange={(e) =>
+										handleInputChange("userName", e.target.value)
+									}
+									value={profileData.userName}
+									className={`w-full border ${
+										errors?.userName ? "border-red-500" : "border-[#000000]/20"
+									} rounded-[12px] py-[15px] px-[12px] text-[000000]/60 outline-none`}
+								/>
+								{errors?.userName && (
+									<p className='text-red-500 text-sm mt-1'>
+										{errors?.userName}
+									</p>
+								)}
+							</div>
+							<div>
+								<input
+									type='tel'
+									placeholder='Phone number'
+									onChange={(e) =>
+										handleInputChange("phoneNumber", e.target.value)
+									}
+									value={profileData.phoneNumber}
+									className={`w-full border ${
+										errors?.phoneNumber
+											? "border-red-500"
+											: "border-[#000000]/20"
+									} rounded-[12px] py-[15px] px-[12px] text-[000000]/60 outline-none`}
+								/>
+								{errors?.phoneNumber && (
+									<p className='text-red-500 text-sm mt-1'>
+										{errors?.phoneNumber}
+									</p>
+								)}
+							</div>
+							<div>
+								<input
+									type='email'
+									placeholder='Email'
+									onChange={(e) => handleInputChange("email", e.target.value)}
+									value={profileData.email}
+									className={`w-full border ${
+										errors?.email ? "border-red-500" : "border-[#000000]/20"
+									} rounded-[12px] py-[15px] px-[12px] text-[000000]/60 outline-none`}
+								/>
+								{errors?.email && (
+									<p className='text-red-500 text-sm mt-1'>{errors?.email}</p>
+								)}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -91,8 +189,11 @@ const ProfilePage = () => {
 			<div className='px-[16px] fixed bottom-0 w-full bg-white py-[2rem]'>
 				<div className='w-full md:w-[60%] lg:w-[40%] flex justify-center mx-auto '>
 					<Link
-						href='/create-store'
-						className='bg-[#8A226F] outline-none border-0 text-white w-full rounded-[90px] py-[10px] text-center'>
+						href={isValid ? "/create-store" : "#"}
+						className={`${
+							isValid ? "bg-[#8A226F]" : "bg-[#8A226F]/50 cursor-not-allowed"
+						} outline-none border-0 text-white w-full rounded-[90px] py-[10px] text-center`}
+						onClick={(e) => !isValid && e.preventDefault()}>
 						Continue
 					</Link>
 				</div>
