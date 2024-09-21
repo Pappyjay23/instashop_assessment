@@ -193,28 +193,30 @@ const CreateProductPage = () => {
 						/>
 					</div>
 					{inventoryChecked && (
-						<div className='mb-[16px] flex flex-col gap-[16px]'>
-							{inventoryOptions.map((option, index) => (
-								<InventoryCard
-									option={option}
-									key={index}
-									index={index}
-									inventoryOptions={inventoryOptions}
-									setInventoryOptions={setInventoryOptions}
-									handleOptionValueChange={handleOptionValueChange}
-									handleRemoveValue={handleRemoveValue}
-								/>
-							))}
-						</div>
+						<>
+							<div className='mb-[16px] flex flex-col gap-[16px]'>
+								{inventoryOptions.map((option, index) => (
+									<InventoryCard
+										option={option}
+										key={index}
+										index={index}
+										inventoryOptions={inventoryOptions}
+										setInventoryOptions={setInventoryOptions}
+										handleOptionValueChange={handleOptionValueChange}
+										handleRemoveValue={handleRemoveValue}
+									/>
+								))}
+							</div>
+							<div>
+								<button
+									className='bg-[#000000]/[0.03] outline-none border-0 text-[#8A226F] w-full rounded-[90px] py-[10px] text-center flex justify-center items-center gap-[6px]'
+									onClick={handleAddOption}>
+									<LuPlus size={20} />
+									<span className='font-medium'>Add new option</span>
+								</button>
+							</div>
+						</>
 					)}
-					<div>
-						<button
-							className='bg-[#000000]/[0.03] outline-none border-0 text-[#8A226F] w-full rounded-[90px] py-[10px] text-center flex justify-center items-center gap-[6px]'
-							onClick={handleAddOption}>
-							<LuPlus size={20} />
-							<span className='font-medium'>Add new option</span>
-						</button>
-					</div>
 				</div>
 
 				<div className='px-[16px] pt-[16px] pb-[20px] border-t border-[#000]/10'>
