@@ -18,7 +18,7 @@ const CreateProductPage = () => {
 		useState(false);
 	return (
 		<section className='relative w-full min-h-screen'>
-			<div className="max-w-[800px] mx-auto">
+			<div className='max-w-[800px] mx-auto'>
 				<div className='px-[16px] pt-[12px]'>
 					<div className='flex items-center justify-between mb-[20px]'>
 						<Link
@@ -72,7 +72,8 @@ const CreateProductPage = () => {
 					</div>
 					<div className='flex gap-[8px] mb-[16px]'>
 						<label
-							htmlFor='checkbox'
+							className='cursor-pointer'
+							htmlFor='inventory-variation'
 							onClick={() => setInventoryChecked((prev) => !prev)}>
 							<div
 								className={`w-[20px] h-[20px] ${
@@ -88,8 +89,8 @@ const CreateProductPage = () => {
 						</label>
 						<input
 							type='checkbox'
-							name='checkbox'
-							id='checkbox'
+							name='inventory-variation'
+							id='inventory-variation'
 							className='hidden'
 						/>
 						<span>
@@ -137,7 +138,8 @@ const CreateProductPage = () => {
 						<p>Self shipping</p>
 						<div>
 							<label
-								htmlFor='checkbox'
+								className='cursor-pointer'
+								htmlFor='self-shipping'
 								onClick={() => setSelfShippingChecked((prev) => !prev)}>
 								<div
 									className={`w-[20px] h-[20px] ${
@@ -153,8 +155,8 @@ const CreateProductPage = () => {
 							</label>
 							<input
 								type='checkbox'
-								name='checkbox'
-								id='checkbox'
+								name='self-shipping'
+								id='self-shipping'
 								className='hidden'
 							/>
 						</div>
@@ -163,7 +165,8 @@ const CreateProductPage = () => {
 						<p>InstaShop shipping</p>
 						<div>
 							<label
-								htmlFor='checkbox'
+								className='cursor-pointer'
+								htmlFor='instashop-shipping'
 								onClick={() => setInstaShopShippingChecked((prev) => !prev)}>
 								<div
 									className={`w-[20px] h-[20px] ${
@@ -181,8 +184,8 @@ const CreateProductPage = () => {
 							</label>
 							<input
 								type='checkbox'
-								name='checkbox'
-								id='checkbox'
+								name='instashop-shipping'
+								id='instashop-shipping'
 								className='hidden'
 							/>
 						</div>
