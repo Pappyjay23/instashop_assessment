@@ -43,7 +43,7 @@ const ProductPreviewPage = () => {
 
 				<div className='px-[16px] pb-[12px]'>
 					<div className='flex flex-col items-center'>
-						<div className='w-[360px] h-[360px] relative'>
+						<div className='w-[360px] h-[360px] rounded-[20px] overflow-hidden relative'>
 							{productImages.length > 0 ? (
 								<Image
 									src={productImages[0].url}
