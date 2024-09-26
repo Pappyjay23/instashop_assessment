@@ -169,16 +169,14 @@ const CreateProductPage = () => {
 							className='cursor-pointer flex items-center gap-2'
 							htmlFor='inventory-variation'>
 							<div
-								className={`w-5 h-5 ${
+								className={`w-[20px] h-[20px] ${
 									inventoryChecked
 										? "bg-[#8A226F]"
 										: "bg-white border border-black/60"
-								} rounded text-white flex justify-center items-center`}
-								// onClick={() => setInventoryChecked((prev) => !prev)}
-							>
+								} rounded text-white flex justify-center items-center`}>
 								{inventoryChecked && <IoCheckmark size={15} />}
 							</div>
-							<span>
+							<span className='w-fit'>
 								This product is variable; has different colors, sizes, weight,
 								materials, etc.
 							</span>

@@ -1,5 +1,5 @@
 import { InventoryOption } from "@/app/create-product/page";
-import React from "react";
+import React, { useState } from "react";
 import { GoKebabHorizontal } from "react-icons/go";
 import Badge from "./Badge";
 
@@ -19,6 +19,15 @@ const InventoryCard = ({
 	handleOptionValueChange,
 	handleRemoveValue,
 }: Props) => {
+	const [showDropdown, setShowDropdown] = useState(false);
+
+	const handleDeleteCard = (indexToDelete: number) => {
+		const newOptions = inventoryOptions.filter(
+			(_, idx) => idx !== indexToDelete
+		);
+		setInventoryOptions(newOptions);
+	};
+
 	return (
 		<div
 			className='border rounded-[12px] border-[#0000]/20 px-[12px] py-[10px]'
@@ -48,7 +57,25 @@ const InventoryCard = ({
 						))}
 					</div>
 				</div>
-				<GoKebabHorizontal size={20} className='text-[#000]/60' />
+				<div className='relative'>
+					<GoKebabHorizontal
+						size={20}
+						className='text-[#000]/60 cursor-pointer'
+						onClick={() => setShowDropdown(!showDropdown)}
+					/>
+
+					{showDropdown && (
+						<div className='absolute top-8 right-0 bg-white border shadow-lg rounded-md'>
+							<ul>
+								<li
+									className='px-4 py-2 cursor-pointer hover:bg-gray-100'
+									onClick={() => handleDeleteCard(index)}>
+									Delete
+								</li>
+							</ul>
+						</div>
+					)}
+				</div>
 			</div>
 			<input
 				className='w-full py-2 border-0 rounded-md shadow-sm outline-none'
